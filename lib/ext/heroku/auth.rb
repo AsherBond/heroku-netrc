@@ -25,7 +25,7 @@ class Heroku::Auth
         write_netrc
         FileUtils.rm_f(credentials_file)
       elsif !(@credentials = read_netrc)
-        @credentials = ask_for_and_save_credentials
+        ask_for_and_save_credentials
       end
       @credentials
     end
