@@ -38,8 +38,6 @@ class Heroku::Auth
         FileUtils.chmod(0600, netrc_path)
       end
       @netrc = Netrc.read(netrc_path)
-      @netrc.new_item_prefix = "# Managed by the Heroku client\n"
-      @netrc
     end
 
     def read_netrc  # :nodoc:
@@ -48,7 +46,9 @@ class Heroku::Auth
 
     def write_netrc   # :nodoc:
       # TODO: include comment about where things came from
+      @netrc.new_item_prefix = "\n# Heroku API credentials\n"
       netrc['api.heroku.com'] = self.credentials
+      @netrc.new_item_prefix = "\n# Heroku git credentials\n"
       netrc['code.heroku.com'] = self.credentials
       netrc.save
     end
