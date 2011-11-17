@@ -4,8 +4,6 @@ Uses netrc files to store Heroku credentials.
 
 ## Installation
 
-NOTE: This plugin depends on the netrc gem being installed.
-
     $ heroku plugins:install git://github.com/geemus/heroku-netrc.git
 
 ## Usage
