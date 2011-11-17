@@ -37,7 +37,16 @@ class Heroku::Auth
         FileUtils.touch(netrc_path)
         FileUtils.chmod(0600, netrc_path)
       end
-      @netrc = Netrc.read(netrc_path)
+      begin
+        @netrc = Netrc.read(netrc_path)
+      rescue Netrc::Error => error
+        if error.message =~ /^Permission bits for/
+          perm = File.stat(netrc_path).mode & 0777
+          abort("Permissions #{perm} for '#{netrc_path}' are too open. You should run `chmod 0600 #{netrc_path}` so that your credentials are NOT accessible by others.")
+        else
+          raise error
+        end
+      end
     end
 
     def read_netrc  # :nodoc:
