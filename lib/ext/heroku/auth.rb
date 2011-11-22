@@ -7,24 +7,33 @@ class Heroku::Auth
         write_netrc
         check
       rescue ::RestClient::Unauthorized, ::RestClient::ResourceNotFound => e
-        # TODO: delete_credentials
+        delete_credentials
         clear
         display "Authentication failed."
         retry if retry_login?
         exit 1
       rescue Exception => e
-        # TODO: delete_credentials
+        delete_credentials
         raise e
       end
       check_for_associated_ssh_key unless Heroku::Command.current_command == "keys:add"
     end
 
+    def delete_credentials # :nodoc:
+      netrc.new_item_prefix = "\n# Heroku API credentials\n"
+      netrc['api.heroku.com'] = [self.credentials.first, '!']
+      netrc.new_item_prefix = "\n# Heroku git credentials\n"
+      netrc['code.heroku.com'] = [self.credentials.first, '!']
+      netrc.save
+      @credentials = nil
+    end
+
     def get_credentials   # :nodoc:
       return if @credentials
-      if @credentials = read_credentials
+      if (@credentials = read_credentials) && !(@credentials.last == '!')
         write_netrc
         FileUtils.rm_f(credentials_file)
-      elsif !(@credentials = read_netrc)
+      elsif !(@credentials = read_netrc) || (@credentials.last == '!')
         ask_for_and_save_credentials
       end
       @credentials
