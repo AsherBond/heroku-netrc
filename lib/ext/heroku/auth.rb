@@ -21,14 +21,14 @@ class Heroku::Auth
 
     def delete_credentials # :nodoc:
       if self.credentials
-        if netrc['api.heroku.com']
+        if netrc["api.#{host}"]
           netrc.new_item_prefix = "\n# Heroku API credentials\n"
-          netrc['api.heroku.com'] = [self.credentials.first, '!']
+          netrc["api.#{host}"] = [self.credentials.first, '!']
           netrc.save
         end
-        if netrc['code.heroku.com']
+        if netrc["code.#{host}"]
           netrc.new_item_prefix = "\n# Heroku git credentials\n"
-          netrc['code.heroku.com'] = [self.credentials.first, '!']
+          netrc["code.#{host}"] = [self.credentials.first, '!']
           netrc.save
         end
         @credentials = nil
@@ -66,14 +66,14 @@ class Heroku::Auth
     end
 
     def read_netrc  # :nodoc:
-      netrc['api.heroku.com']
+      netrc["api.#{host}"]
     end
 
     def write_netrc   # :nodoc:
       netrc.new_item_prefix = "\n# Heroku API credentials\n"
-      netrc['api.heroku.com'] = self.credentials
+      netrc["api.#{host}"] = self.credentials
       netrc.new_item_prefix = "\n# Heroku git credentials\n"
-      netrc['code.heroku.com'] = self.credentials
+      netrc["code.#{host}"] = self.credentials
       netrc.save
     end
 
