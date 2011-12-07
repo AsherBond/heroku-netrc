@@ -42,7 +42,7 @@ class Heroku::Auth
           display <<-WARNING
  !    You have an old API key which may be incompatible with tools such as curl.
  !    Fix this by clicking 'Regenerate' at:
- !    https://api.heroku.com/account
+ !    https://api.#{host}/account
           WARNING
         end
       elsif !(@credentials = read_netrc) || (@credentials.last == '!')
