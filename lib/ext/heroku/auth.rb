@@ -35,17 +35,7 @@ class Heroku::Auth
 
     def get_credentials   # :nodoc:
       return if @credentials
-      if (@credentials = read_credentials) && !(@credentials.last == '!')
-        write_netrc
-        FileUtils.rm_f(credentials_file)
-        if @credentials.last.length > 40
-          display <<-WARNING
- !    You have an old API key which may be incompatible with tools such as curl.
- !    Fix this by clicking 'Regenerate' at:
- !    https://api.#{host}/account
-          WARNING
-        end
-      elsif !(@credentials = read_netrc) || (@credentials.last == '!')
+      if !(@credentials = read_netrc) || (@credentials.last == '!')
         ask_for_and_save_credentials
       end
       @credentials
