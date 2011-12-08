@@ -2,7 +2,7 @@ require 'fileutils'
 require 'vendor/netrc'
 
 require 'heroku/auth'
-require 'ext/heroku/auth'
+require 'netrc/heroku/auth'
 
 # convert to .netrc from old at install time
 if Heroku::Auth.credentials = Heroku::Auth.read_credentials
